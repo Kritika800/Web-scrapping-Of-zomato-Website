@@ -1,0 +1,39 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas
+
+url = "https://www.zomato.com/cincinnati/restaurants"
+headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
+response = requests.get(url, headers = headers)
+soup = BeautifulSoup(response.content,"html.parser")
+    #i think firstly i should learn html for webscrapping?why everwhere same user agent is being used .every time the url will be called in range using loop?because we are taking data from ech and evry restaurant that is why
+    #not aware of these headers response !u were using...u were saying 
+#how to find which class will be suitable the most!!this 1
+searchList = soup.find_all('div',{"class": "js-search-result-li"})
+totalData = []
+for each in searchList:
+    data = {}
+    # print(each)
+    data["restaurants"] = each.find(
+        "a", {"data-result-type": "ResCard_Name"}).text
+    data["locality"] = each.find("b").text.replace('\n', "").strip()
+    data["ratings"] = each.find("span",{"class": "rating-value"}).text.replace('\n', "").strip()
+    foodContent = each.find("span", {"class" : "col-s-11 col-m-12 nowrap pl0"})
+    # print(foodContent)
+    foods = foodContent.find_all("a")
+    data["foods"] = [food.string for food in foods]
+    print("""
+    Restaurant Name: = {}\n
+    Location: = {}\n
+    Ratings: = {}\n
+    Foods: = {}\n
+    ---------h
+    """.format(data["restaurants"], data["locality"], data["ratings"]," ".join(data["foods"])))
+    totalData.append(data)
+df = pandas.DataFrame(totalData)
+df = df[["restaurants", "locality", "ratings", "foods"]]
+df.to_csv("zomatoData.csv")
+
+#if we have to extract the paragraph?
+#b tag what for?
+#not getting the total overview about tags
