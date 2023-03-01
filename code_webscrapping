@@ -1,15 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas
-
+#request is an http request to thw server to make application more human friendly....he HTTP request returns a Response Object with all the response data (content, encoding, status, etc).
 url = "https://www.zomato.com/cincinnati/restaurants"
 headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
 response = requests.get(url, headers = headers)
+#through request library a direct connected will be created between firefox and the application url
 soup = BeautifulSoup(response.content,"html.parser")
-    #i think firstly i should learn html for webscrapping?why everwhere same user agent is being used .every time the url will be called in range using loop?because we are taking data from ech and evry restaurant that is why
+#beautiful soup helps in navigation of the sites
+#by using html parser , we can parse all those html files
+    #i think firstly i should learn html for webscrapping? why everwhere same user agent is being used .every time the url will be called in range using loop?because we are taking data from ech and evry restaurant that is why
     #not aware of these headers response !u were using...u were saying 
 #how to find which class will be suitable the most!!this 1
 searchList = soup.find_all('div',{"class": "js-search-result-li"})
+#it will find all items related to it.
 totalData = []
 for each in searchList:
     data = {}
